@@ -2,13 +2,7 @@
 
 import LaptopHero from "./LaptopHero";
 import { Headline, Item, Reveal, Rise, Stagger } from "./motion";
-
-const navItems = [
-  { label: "Catalog", href: "#catalog" },
-  { label: "Studio", href: "#studio" },
-  { label: "Repair lab", href: "#lab" },
-  { label: "Contact", href: "#contact" },
-];
+import { navItems } from "./nav";
 
 const oems = [
   "Dell Technologies",
@@ -128,6 +122,20 @@ export default function Home() {
             <a className="btn solid sm" href="#contact">
               Get a quote
             </a>
+            <details className="menu">
+              <summary className="icon-btn" aria-label="Open menu">
+                <span className="material-symbols-outlined">menu</span>
+              </summary>
+              <nav
+                onClick={(e) => e.currentTarget.closest("details")?.removeAttribute("open")}
+              >
+                {navItems.map((item) => (
+                  <a key={item.label} href={item.href}>
+                    {item.label}
+                  </a>
+                ))}
+              </nav>
+            </details>
           </div>
         </div>
       </header>

@@ -15,6 +15,7 @@
   --blue-deep: #0058A8;
   --blue-wash: #EDF6FE;
 
+  --topbar-h: 79px;
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'Inter', system-ui, sans-serif;
 
@@ -58,6 +59,9 @@ button { cursor: pointer; }
 
 /* ---------- editorial primitives ---------- */
 .wrap { width: min(1240px, calc(100% - 56px)); margin: 0 auto; }
+
+/* jump links land below the fixed header, not under it */
+section[id] { scroll-margin-top: calc(var(--topbar-h) + 12px); }
 
 /* tiny tracked uppercase label — the Hillwood signature */
 .label {
@@ -103,8 +107,6 @@ button { cursor: pointer; }
   top: 0;
   height: 100vh;
   overflow: hidden;
-  display: grid;
-  place-items: center;
   perspective: 2600px;
   perspective-origin: 50% 32%;
   background:
@@ -127,7 +129,12 @@ button { cursor: pointer; }
 }
 
 .scene {
-  position: relative;
+  /* Absolutely centred rather than a grid item: at viewports under 1280px an
+     oversized centred grid item overflows to one side and gets clipped. */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -400px 0 0 -640px;
   width: 1280px;
   height: 800px;
   transform-style: preserve-3d;
@@ -278,6 +285,7 @@ button { cursor: pointer; }
 
 .hint {
   position: absolute;
+  pointer-events: none;
   bottom: 30px;
   left: 50%;
   translate: -50% 0;
@@ -289,13 +297,40 @@ button { cursor: pointer; }
 .hint .material-symbols-outlined { font-size: 16px; color: var(--blue); animation: bob 1.9s ease-in-out infinite; }
 @keyframes bob { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(3px); } }
 
+/* Zoom complete: leave the 3D rendering context so the hero hit-tests and
+   behaves like any other part of the page. The screen already fills the
+   viewport at this point, so the swap is visually a no-op. */
+.viewport.flat .scene,
+.viewport.flat .lid,
+.viewport.flat .screen {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  width: auto;
+  height: auto;
+  transform: none;
+  transform-style: flat;
+  border-radius: 0;
+  box-shadow: none;
+  backface-visibility: visible;
+}
+.viewport.flat .base,
+.viewport.flat .lid-mark,
+.viewport.flat .off,
+.viewport.flat .sheen,
+.viewport.flat::before { display: none; }
+
 /* ============================================================
    2 — THE PAGE INSIDE THE SCREEN (becomes the full-bleed hero)
    ============================================================ */
 .screen-page {
+  /* Sizes below are in container units so the hero scales against its OWN box:
+     the 1280px design while it's a laptop screen, the real viewport once the
+     zoom lands and we drop out of 3D. Same rules serve both. */
+  container-type: inline-size;
   position: relative;
   height: 100%;
-  padding: 40px 64px 44px;
+  padding: clamp(18px, 3.2cqw, 40px) clamp(16px, 5cqw, 64px) clamp(18px, 3.4cqw, 44px);
   display: flex;
   flex-direction: column;
   background:
@@ -304,36 +339,42 @@ button { cursor: pointer; }
   overflow: hidden;
 }
 
-.screen-head { display: flex; align-items: center; gap: 44px; }
-.screen-head img { height: 30px; width: auto; }
-.screen-head nav { display: flex; gap: 32px; margin-left: auto; }
-.screen-head .pill {
-  padding: 11px 22px;
-  border-radius: 999px;
-  background: var(--ink);
-  color: var(--paper);
-  font-size: 13px;
-  font-weight: 500;
-}
-
 .screen-body { margin: auto 0; }
-.screen-body .eyebrow { margin-bottom: 26px; }
-.screen-body h2 { font-size: 74px; max-width: 16ch; }
-.screen-body > p { margin: 26px 0 0; max-width: 600px; font-size: 18px; }
-.screen-cta { display: flex; gap: 14px; margin-top: 34px; }
+.screen-body .eyebrow { margin-bottom: clamp(14px, 2cqw, 26px); }
+.screen-body h2 { font-size: clamp(28px, 5.8cqw, 78px); max-width: 16ch; }
+.screen-body > p { margin: clamp(14px, 2cqw, 26px) 0 0; max-width: 47cqw; font-size: clamp(13px, 1.4cqw, 18px); }
+.screen-cta { display: flex; flex-wrap: wrap; gap: clamp(9px, 1.1cqw, 14px); margin-top: clamp(18px, 2.7cqw, 34px); }
 
 .screen-foot {
   display: flex;
-  gap: 56px;
-  padding-top: 24px;
+  gap: clamp(18px, 4.4cqw, 56px);
+  padding-top: clamp(14px, 1.9cqw, 24px);
   border-top: 1px solid var(--rule);
 }
 .screen-foot span {
   display: block;
   font-family: var(--font-serif);
-  font-size: 30px;
+  font-size: clamp(17px, 2.35cqw, 30px);
   letter-spacing: -.02em;
   margin-bottom: 6px;
+}
+
+/* the hero's own controls scale with the screen box, not the page */
+.screen-page .btn {
+  padding: clamp(10px, 1.1cqw, 15px) clamp(16px, 2.2cqw, 28px);
+  font-size: clamp(12px, 1.13cqw, 14.5px);
+  gap: clamp(6px, .8cqw, 10px);
+}
+.screen-page .label { font-size: clamp(8px, .82cqw, 10.5px); }
+.screen-page .eyebrow .bar { width: clamp(20px, 3.6cqw, 46px); }
+
+/* narrow screen box (a phone once we're flat): the nav collapses away */
+@container (max-width: 620px) {
+  .screen-body > p { max-width: none; }
+  /* keep the three figures on one line rather than wrapping off the screen */
+  .screen-foot { gap: 12px; }
+  .screen-foot > div { flex: 1 1 0; min-width: 0; }
+  .screen-page .label { font-size: 8px; letter-spacing: .12em; }
 }
 
 /* ============================================================
@@ -373,17 +414,22 @@ button { cursor: pointer; }
 .ulink:hover { border-color: var(--blue); color: var(--blue); }
 
 /* ============================================================
-   4 — HEADER
+   4 — HEADER — the site's only nav, pinned to the top of every screen
+   including the hero.
    ============================================================ */
 .topbar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 60;
   background: #F7F6F3e6;
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--rule);
 }
-.topbar-inner { display: flex; align-items: center; gap: 36px; height: 78px; }
+/* the fixed header is out of flow, so the page below the stage makes room */
+main { padding-top: var(--topbar-h); }
+.topbar-inner { display: flex; align-items: center; gap: 36px; height: calc(var(--topbar-h) - 1px); }
 .topbar img { height: 26px; width: auto; }
 .main-nav { display: flex; gap: 34px; margin-left: auto; font-size: 14px; color: var(--ink-2); }
 .main-nav a { position: relative; padding: 4px 0; transition: color .2s; }
@@ -412,6 +458,26 @@ button { cursor: pointer; }
   transition: border-color .2s, color .2s;
 }
 .icon-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+
+/* mobile disclosure menu — native <details>, shown only below the nav breakpoint */
+.menu { display: none; position: relative; }
+.menu > summary { list-style: none; cursor: pointer; }
+.menu > summary::-webkit-details-marker { display: none; }
+.menu[open] > summary { border-color: var(--blue); color: var(--blue); }
+.menu > nav {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 12px);
+  min-width: 208px;
+  display: grid;
+  padding: 8px;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  box-shadow: 0 18px 40px -18px #12151a33;
+}
+.menu > nav a { padding: 13px 16px; font-size: 15px; }
+.menu > nav a:hover { background: var(--paper-2); color: var(--blue); }
 
 /* ============================================================
    5 — SECTIONS
@@ -687,13 +753,20 @@ button { cursor: pointer; }
 @media (max-width: 1080px) {
   .sec-head, .split, .inq-layout { grid-template-columns: 1fr; gap: 44px; }
   .split.flip > :first-child { order: 0; }
-  .cap { grid-template-columns: 54px 1fr auto; gap: 24px; }
-  .cap p { grid-column: 2 / 4; }
+  /* two rows: title + arrow on the first, copy spanning underneath */
+  .cap { grid-template-columns: 54px 1fr auto; gap: 12px 24px; align-items: center; }
+  .cap-n { grid-column: 1; grid-row: 1; }
+  .cap-title { grid-column: 2; grid-row: 1; }
+  .cap .go { grid-column: 3; grid-row: 1; }
+  .cap p { grid-column: 2 / 4; grid-row: 2; }
   .stats { grid-template-columns: 1fr 1fr; }
   .stat:nth-child(2) { border-right: 0; }
   .stat:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 44px; }
   .main-nav { display: none; }
+  .menu { display: block; }
+  .figure img { aspect-ratio: 16 / 11; }
+  .split .display, .inq-layout .display { max-width: 18ch; }
 }
 
 @media (max-width: 720px) {
@@ -701,12 +774,43 @@ button { cursor: pointer; }
   .section { padding: 90px 0; }
   .section.tight { padding: 70px 0; }
   .closing { padding: 100px 0; }
-  .cap { grid-template-columns: 1fr; gap: 16px; padding: 30px 0; }
+  .sec-head { margin-bottom: 48px; }
+  .cap { grid-template-columns: 1fr; gap: 14px; padding: 30px 0; }
   .cap .go { display: none; }
   .stats { grid-template-columns: 1fr; }
-  .stat { border-right: 0; border-bottom: 1px solid var(--rule); }
-  .ops-cards, .form-row, .footer-grid { grid-template-columns: 1fr; }
-  .form-card { padding: 28px; }
+  .stat { border-right: 0; border-bottom: 1px solid var(--rule); padding: 34px 0; }
+  .ops-cards, .form-row, .footer-grid, .lab-feats { grid-template-columns: 1fr; }
+  .form-card, .lab-card { padding: 26px; }
   .screen-foot { gap: 28px; }
   .stage-title { bottom: 9vh; }
+  .marquee { padding: 22px 0; gap: 40px; }
+  .marquee ul, .marquee li { gap: 40px; }
+  .marquee li { font-size: 16px; }
+  .faq summary { font-size: 18px; padding: 24px 0; gap: 20px; }
+  .lab-card > p { font-size: 18px; }
+  .bottom-bar, .form-foot { flex-direction: column; gap: 14px; }
+  .bottom-bar nav { flex-wrap: wrap; gap: 18px; }
+  .hours { width: 100%; }
+}
+
+/* phones: the quote button and the menu both fit only if the button sheds text */
+@media (max-width: 520px) {
+  .wrap { width: calc(100% - 28px); }
+  :root { --topbar-h: 67px; }
+  .topbar-inner { gap: 14px; }
+  .topbar img { height: 22px; }
+  .topbar-actions { gap: 8px; }
+  .icon-btn { width: 38px; height: 38px; }
+  .btn.sm { padding: 10px 15px; font-size: 12.5px; }
+  .section { padding: 72px 0; }
+  .lede { font-size: 16px; }
+  .figure img { aspect-ratio: 4 / 3; }
+  .figure figcaption { padding: 18px 20px; }
+  .figure figcaption p { font-size: 17px; }
+  .eyebrow .bar { width: 26px; }
+  .label { font-size: 9.5px; letter-spacing: .2em; }
+  .cap-title h3 { font-size: 21px; }
+  .form-card, .lab-card { padding: 22px; }
+  .closing .btn { width: 100%; }
+  .closing-cta { flex-direction: column; }
 }

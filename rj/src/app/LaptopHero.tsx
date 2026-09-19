@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const clamp = (n: number) => Math.min(1, Math.max(0, n));
 const ease = (t: number) => t * t * (3 - 2 * t);
@@ -17,15 +17,30 @@ const H = 800;
  */
 export default function LaptopHero() {
   const stage = useRef<HTMLElement>(null);
+  // Chrome flattens hit-testing inside a `transform-style: preserve-3d` subtree,
+  // so links in the lid can never be clicked however correct the markup is. Once
+  // the zoom lands, we drop out of 3D entirely: the screen becomes a plain
+  // full-viewport element and the hero is a real, operable page. Until then it's
+  // `inert` — not clickable, not tabbable, not announced.
+  const [live, setLive] = useState(false);
+  const liveRef = useRef(false);
 
   useEffect(() => {
     const root = document.documentElement;
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     let s0 = 1; // fitted-on-desk scale
     let s1 = 1; // screen-fills-viewport scale
+    let lift = 1020; // how far up the shut laptop sits, in scene px
 
+    // Phones get a much larger share of the viewport — 42% of 390px would render
+    // the laptop at ~160px, which reads as nothing at all.
     const fit = () => {
-      s0 = Math.min((innerWidth * 0.42) / W, (innerHeight * 0.42) / H);
+      const narrow = innerWidth < 900;
+      s0 = Math.min(
+        (innerWidth * (narrow ? 0.78 : 0.42)) / W,
+        (innerHeight * (narrow ? 0.3 : 0.42)) / H
+      );
+      lift = narrow ? 760 : 1020;
       // 1.02 covers the lid's translateZ(-12px), which perspective shrinks a few px
       s1 = Math.max(innerWidth / W, innerHeight / H) * 1.02;
     };
@@ -42,9 +57,16 @@ export default function LaptopHero() {
       root.style.setProperty("--z", String(z));
       root.style.setProperty("--ang", `${-90 + l * 98 - z * 8}deg`);
       root.style.setProperty("--tilt", `${-(1 - l) * 40}deg`);
-      root.style.setProperty("--ty", `${-(1 - l) * 1020}px`);
+      root.style.setProperty("--ty", `${-(1 - l) * lift}px`);
       root.style.setProperty("--s", String(s0 + (s1 - s0) * z));
       root.style.setProperty("--bezel", String(1 - clamp((z - 0.75) / 0.25)));
+
+      // hysteresis so scrubbing across the threshold can't flap the swap
+      const nowLive = liveRef.current ? z > 0.97 : z >= 0.995;
+      if (nowLive !== liveRef.current) {
+        liveRef.current = nowLive;
+        setLive(nowLive);
+      }
     };
 
     const onResize = () => {
@@ -63,8 +85,8 @@ export default function LaptopHero() {
   }, []);
 
   return (
-    <section className="stage" ref={stage}>
-      <div className="viewport">
+    <section className="stage" id="top" ref={stage}>
+      <div className={live ? "viewport flat" : "viewport"}>
         <div className="scene">
           <div className="lid">
             <div className="lid-mark">RJ</div>
@@ -73,18 +95,7 @@ export default function LaptopHero() {
               <div className="off" />
               <div className="sheen" />
 
-              <div className="screen-page">
-                <header className="screen-head">
-                  <img src="/logo/rj-careplus-logo.png" alt="RJ CAREPLUS" />
-                  <nav>
-                    <span className="label">Catalog</span>
-                    <span className="label">Studio</span>
-                    <span className="label">Repair lab</span>
-                    <span className="label">Contact</span>
-                  </nav>
-                  <span className="pill">Get a quote</span>
-                </header>
-
+              <div className="screen-page" inert={!live}>
                 <div className="screen-body">
                   <p className="eyebrow">
                     <span className="bar" />
@@ -99,8 +110,12 @@ export default function LaptopHero() {
                     dies at the worst possible moment.
                   </p>
                   <div className="screen-cta">
-                    <span className="btn solid">Request a BOQ quote</span>
-                    <span className="btn line">Book a repair pickup</span>
+                    <a className="btn solid" href="#contact">
+                      Request a BOQ quote
+                    </a>
+                    <a className="btn line" href="#lab">
+                      Book a repair pickup
+                    </a>
                   </div>
                 </div>
 

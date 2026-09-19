@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 
 /** One easing curve for the whole site, so nothing feels like a different app. */
@@ -24,11 +24,12 @@ export function Rise({
   as?: "div" | "section" | "article" | "li";
 }) {
   const M = motion[as];
+  const still = useReducedMotion();
   return (
     <M
       className={className}
       variants={rise}
-      initial="hidden"
+      initial={still ? "show" : "hidden"}
       whileInView="show"
       viewport={{ once: true, amount: 0.2 }}
       transition={{ delay }}
@@ -48,13 +49,14 @@ export function Stagger({
   className?: string;
   gap?: number;
 }) {
+  const still = useReducedMotion();
   return (
     <motion.div
       className={className}
-      initial="hidden"
+      initial={still ? "show" : "hidden"}
       whileInView="show"
       viewport={{ once: true, amount: 0.15 }}
-      variants={{ show: { transition: { staggerChildren: gap } } }}
+      variants={{ show: { transition: { staggerChildren: still ? 0 : gap } } }}
     >
       {children}
     </motion.div>
@@ -85,13 +87,14 @@ export function Headline({
   italicFrom?: number;
 }) {
   const words = text.split(" ");
+  const still = useReducedMotion();
   return (
     <motion.h2
       className={className}
-      initial="hidden"
+      initial={still ? "show" : "hidden"}
       whileInView="show"
       viewport={{ once: true, amount: 0.4 }}
-      variants={{ show: { transition: { staggerChildren: 0.055 } } }}
+      variants={{ show: { transition: { staggerChildren: still ? 0 : 0.055 } } }}
     >
       {words.map((word, i) => (
         <span key={`${word}-${i}`} style={{ display: "inline-block", overflow: "hidden", verticalAlign: "bottom" }}>
@@ -123,10 +126,11 @@ export function Reveal({
   className?: string;
   children?: ReactNode;
 }) {
+  const still = useReducedMotion();
   return (
     <motion.figure
       className={className}
-      initial="hidden"
+      initial={still ? "show" : "hidden"}
       whileInView="show"
       viewport={{ once: true, amount: 0.25 }}
       variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { duration: 0.6 } } }}
