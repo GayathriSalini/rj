@@ -1,0 +1,56 @@
+<!doctype html><meta charset="utf-8">
+<style>body{font:13px ui-monospace;background:#111;color:#eee;margin:0;padding:10px}pre{white-space:pre-wrap}iframe{position:fixed;left:-9999px;border:0}</style>
+<pre id="out">running…</pre>
+<script>
+const out=[]; const show=()=>document.getElementById('out').textContent=out.join('\n');
+(async()=>{
+ const f=document.createElement('iframe'); f.width=900; f.height=900; f.src='/';
+ document.body.appendChild(f); await new Promise(r=>{f.onload=r});
+ const d=f.contentDocument, w=f.contentWindow;
+ const line=(el)=>getComputedStyle(el.closest('label').querySelector('.field-line'));
+ const first=d.querySelector('.inquiry-form input');
+ const email=d.querySelector('.inquiry-form input[type=email]');
+
+ out.push('resting   field-line transform = '+line(first).transform+'  border='+getComputedStyle(first).borderBottomColor);
+ first.focus();
+ await new Promise(r=>setTimeout(r,450));
+ out.push('focused   label:focus-within = '+first.closest('label').matches(':focus-within')+
+          '  transform='+line(first).transform);
+ first.blur();
+
+ email.value='not-an-email';
+ email.dispatchEvent(new w.Event('input',{bubbles:true}));
+ await new Promise(r=>setTimeout(r,500));
+ out.push('bad email :invalid='+email.matches(':invalid')+
+          '  placeholderShown='+email.matches(':placeholder-shown')+
+          '  border='+getComputedStyle(email).borderBottomColor+
+          '  labelColor='+getComputedStyle(email.closest('label').querySelector('.label')).color);
+
+ email.value='ops@apex.co.in';
+ email.dispatchEvent(new w.Event('input',{bubbles:true}));
+ await new Promise(r=>setTimeout(r,500));
+ email.value='not-an-email'; email.dispatchEvent(new w.Event('input',{bubbles:true}));
+ await new Promise(r=>setTimeout(r,500));
+ const sel1='.inquiry-form :is(input, textarea):invalid:not(:placeholder-shown):not(:focus)';
+ out.push('matches full   = '+email.matches(sel1));
+ out.push('  :invalid     = '+email.matches(':invalid'));
+ out.push('  not(:ph)     = '+email.matches(':not(:placeholder-shown)'));
+ out.push('  not(:focus)  = '+email.matches(':not(:focus)'));
+ out.push('  :is in form  = '+email.matches('.inquiry-form :is(input, textarea)'));
+ out.push('  hasPlaceholderAttr = '+email.hasAttribute('placeholder')+' value="'+email.value+'"');
+ out.push('  --bad = '+getComputedStyle(d.documentElement).getPropertyValue('--bad'));
+ const hits=[]; for(const sh of d.styleSheets){ let rules; try{rules=sh.cssRules}catch(e){continue}
+   for(const r of rules){ if(r.selectorText && r.selectorText.includes('invalid')) hits.push(r.selectorText+' {'+r.style.cssText+'}'); } }
+ out.push('  rules('+hits.length+'): '+hits.join(' || ').slice(0,420));
+ email.value='ops@apex.co.in'; email.dispatchEvent(new w.Event('input',{bubbles:true}));
+ await new Promise(r=>setTimeout(r,500));
+ out.push('good email border='+getComputedStyle(email).borderBottomColor);
+
+ const sel=d.querySelector('.inquiry-form select');
+ out.push('select    appearance='+getComputedStyle(sel).appearance+'  chevron='+(getComputedStyle(sel).backgroundImage!=='none'));
+ out.push('required  marks='+d.querySelectorAll('.inquiry-form .req').length+
+          '  fieldLines='+d.querySelectorAll('.inquiry-form .field-line').length+
+          '  controls='+d.querySelectorAll('.inquiry-form input,.inquiry-form select,.inquiry-form textarea').length);
+ out.push('DONE'); show();
+})();
+</script>

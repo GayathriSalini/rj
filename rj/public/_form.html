@@ -1,0 +1,25 @@
+<!doctype html><meta charset="utf-8">
+<style>body{margin:0;display:flex;gap:10px;background:#222;align-items:flex-start}
+figure{margin:0}figcaption{color:#fff;font:11px ui-monospace;padding:4px}iframe{border:0;display:block}</style>
+<script>
+const cases=[[390,900,'plain'],[760,900,'focus'],[760,900,'invalid']];
+document.write(cases.map(([w,h,m],i)=>`<figure><figcaption>${w} ${m}</figcaption><iframe id="i${i}" width="${w}" height="${h}" src="/"></iframe></figure>`).join(''));
+cases.forEach(([w,h,m],i)=>{
+  const f=document.getElementById('i'+i);
+  f.onload=()=>{const d=f.contentDocument,win=f.contentWindow;
+    d.documentElement.style.scrollBehavior='auto';
+    const st=d.createElement('style');
+    st.textContent='main *,footer *{opacity:1!important} main *:not(.field-line),footer *{transform:none!important}';
+    d.head.appendChild(st);
+    const card=d.querySelector('.form-card');
+    setTimeout(()=>{
+      if(m==='focus'){ d.querySelector('.inquiry-form input').focus(); }
+      if(m==='invalid'){ const el=d.querySelector('.inquiry-form input'); el.focus(); el.blur();
+        el.value='x'; el.value=''; el.dispatchEvent(new win.Event('input',{bubbles:true}));
+        const em=d.querySelector('input[type=email]'); em.value='not-an-email';
+        em.dispatchEvent(new win.Event('input',{bubbles:true})); em.focus(); em.blur(); }
+      win.scrollTo(0, card.getBoundingClientRect().top + win.scrollY - 70);
+    },400);
+  };
+});
+</script>

@@ -362,7 +362,14 @@ export default function Home() {
 
             <Rise delay={0.1}>
               <div className="form-card">
-                <h3>Request a BOQ or repair estimate</h3>
+                <div className="form-head">
+                  <span className="label accent">Engineering desk</span>
+                  <h3>Request a BOQ or repair estimate</h3>
+                  <p>
+                    Six fields. We reply with a costed answer the same working day — no sales
+                    call in between.
+                  </p>
+                </div>
                 <form
                   className="inquiry-form"
                   action="mailto:info.rjcareplus@gmail.com"
@@ -371,23 +378,27 @@ export default function Home() {
                 >
                   <div className="form-row">
                     <label>
-                      <span className="label">Company / organization *</span>
+                      <span className="label">Company / organization <i className="req">*</i></span>
                       <input name="company" type="text" required placeholder="Apex Hospital" />
+                      <span className="field-line" />
                     </label>
                     <label>
-                      <span className="label">Name &amp; designation *</span>
+                      <span className="label">Name &amp; designation <i className="req">*</i></span>
                       <input name="contact" type="text" required placeholder="R. Sharma, IT Lead" />
+                      <span className="field-line" />
                     </label>
                   </div>
 
                   <div className="form-row">
                     <label>
-                      <span className="label">Corporate email *</span>
+                      <span className="label">Corporate email <i className="req">*</i></span>
                       <input name="email" type="email" required placeholder="name@organization.com" />
+                      <span className="field-line" />
                     </label>
                     <label>
-                      <span className="label">Telephone *</span>
+                      <span className="label">Telephone <i className="req">*</i></span>
                       <input name="phone" type="tel" required placeholder="+91 98765 43210" />
+                      <span className="field-line" />
                     </label>
                   </div>
 
@@ -402,6 +413,7 @@ export default function Home() {
                         <option>Printers, toners &amp; consumables</option>
                         <option>Annual maintenance contract</option>
                       </select>
+                      <span className="field-line" />
                     </label>
                     <label>
                       <span className="label">Estimated volume</span>
@@ -412,6 +424,7 @@ export default function Home() {
                         <option>250+ units (enterprise bulk)</option>
                         <option>Single server / storage unit</option>
                       </select>
+                      <span className="field-line" />
                     </label>
                   </div>
 
@@ -422,6 +435,7 @@ export default function Home() {
                       rows={4}
                       placeholder="Paste desired specs (RAM, SSD, processor family, OS image) or describe the hardware fault…"
                     />
+                      <span className="field-line" />
                   </label>
 
                   <button type="submit" className="btn solid">
@@ -430,8 +444,8 @@ export default function Home() {
                   </button>
 
                   <div className="form-foot">
-                    <span className="label">Confidential technical audit</span>
-                    <span className="label">GST invoice &amp; PO ready</span>
+                    <span className="material-symbols-outlined">lock</span>
+                    <span className="label">Confidential · GST invoice &amp; PO ready</span>
                   </div>
                 </form>
               </div>
