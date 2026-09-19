@@ -1,0 +1,20 @@
+:root {
+  --bg: #07080b;
+  --fg: #e8ecf4;
+  --muted: #98a2b8;
+  --accent: #6ee7ff;
+  --accent2: #a78bfa;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: auto; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
