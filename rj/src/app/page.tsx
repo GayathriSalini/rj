@@ -1,622 +1,530 @@
 "use client";
 
-import { useEffect } from "react";
+import LaptopHero from "./LaptopHero";
+import { Headline, Item, Reveal, Rise, Stagger } from "./motion";
 
 const navItems = [
-  { label: "Home", href: "#top" },
-  { label: "About Us", href: "#about" },
-  { label: "Product Catalog", href: "#solutions" },
-  { label: "Services & Repairs", href: "#services" },
-  { label: "Contact", href: "#quote-builder" },
+  { label: "Catalog", href: "#catalog" },
+  { label: "Studio", href: "#studio" },
+  { label: "Repair lab", href: "#lab" },
+  { label: "Contact", href: "#contact" },
 ];
 
-const brandPillars = [
-  "Direct OEM Sourcing",
-  "< 4-Hour SLA Support",
-  "30-Day Corporate PO",
-  "Certified In-House Repairs",
+const oems = [
+  "Dell Technologies",
+  "HPE Enterprise",
+  "Lenovo ThinkSystem",
+  "Cisco Systems",
+  "Fortinet",
+  "Aruba Networks",
+  "Asus Pro",
+  "HP Commercial",
+  "Canon",
+  "Epson",
 ];
 
 const capabilities = [
   {
     icon: "laptop_mac",
-   eyebrow: "PILLAR // 01",
-    title: "Laptops, Desktops & Workstations",
-    text: "Bulk fleet provisioning of business notebooks, engineering CAD workstations, and high-performance desktop rigs tailored for zero day-one lag.",
-    meta: "DELL · LENOVO · HP",
-    cta: "BULK DISPATCH →",
+    title: "Laptops & Workstations",
+    text: "Bulk fleet provisioning of business notebooks, CAD workstations and high-performance desktops — imaged and tuned for zero day-one lag.",
   },
   {
     icon: "dns",
-    eyebrow: "PILLAR // 02",
-    title: "Mission-Critical Servers & Storage",
-    text: "Rackmount, tower, and blade configurations with enterprise hot-swap NVMe/SAS RAID arrays, redundant power units, and automated failover.",
-    meta: "HPE PROLIANT · DELL POWEREDGE",
-    cta: "EXPANDABLE →",
+    title: "Servers & Storage",
+    text: "Rackmount, tower and blade builds with hot-swap NVMe/SAS arrays, redundant power and automated failover.",
   },
   {
     icon: "router",
-    eyebrow: "PILLAR // 03",
-    title: "Perimeter & Network Architecture",
-    text: "Managed L2/L3 PoE switches, Fortinet next-generation firewalls, high-density mesh Wi-Fi 6 access points, and structured Cat6A backbone cabling.",
-    meta: "CISCO · FORTINET · ARUBA",
-    cta: "ZERO LEAK →",
+    title: "Network & Perimeter",
+    text: "Managed L2/L3 PoE switching, next-generation firewalls, Wi-Fi 6 density and structured Cat6A backbone.",
   },
   {
     icon: "home_repair_service",
-    eyebrow: "PILLAR // 04 · SPECIALTY",
-    title: "Enterprise Repairs & Component Sourcing",
-    text: "Certified chip-level diagnostics, BGA rework, logic board repairs, screen replacements, and rapid sourcing of rare legacy or high-spec components.",
-    meta: "IN-LAB & ON-SITE REPAIRS",
-    cta: "ESTIMATE →",
+    title: "Repairs & Sourcing",
+    text: "Chip-level diagnostics, BGA rework, logic board repair, screen replacement and sourcing of rare legacy parts.",
   },
   {
     icon: "print",
-    eyebrow: "PILLAR // 05",
-    title: "Printers, Consumables & Peripherals",
-    text: "High-capacity laser multifunction printers, genuine OEM toners, barcode systems, commercial displays, docks, and ergonomic workstation accessories.",
-    meta: "CANON · EPSON · HP",
-    cta: "PRINT FLEETS →",
+    title: "Print & Peripherals",
+    text: "Laser multifunction fleets, genuine OEM toners, barcode systems, commercial displays and docking.",
   },
   {
     icon: "handshake",
-    eyebrow: "PILLAR // 06",
-    title: "Annual Maintenance Contracts (AMC)",
-    text: "Comprehensive and non-comprehensive SLA agreements ensuring preventive care, guaranteed standby loaners, and immediate certified onsite engineers.",
-    meta: "24/7 SLA COVERAGE",
-    cta: "AMC PLANS →",
+    title: "Maintenance Contracts",
+    text: "Comprehensive and non-comprehensive SLAs with preventive care, standby loaners and on-site engineers.",
   },
 ];
 
-const advantageStats = [
-  { value: "99.8%", label: "SLA Adherence" },
-  { value: "4-Hour", label: "Local Response" },
-  { value: "100%", label: "Genuine OEM Sourcing" },
+const advantages = [
+  {
+    icon: "shield",
+    title: "Genuine, traceable, warranted",
+    text: "Direct authorised channels only — real warranties, serials that track back to Dell, HP, Lenovo and Cisco.",
+  },
+  {
+    icon: "precision_manufacturing",
+    title: "Staged before it ships",
+    text: "Every workstation, server and switch is burned in, firmware-updated and pre-configured in our own lab.",
+  },
+  {
+    icon: "support_agent",
+    title: "An engineer, not an IVR",
+    text: "Escalate straight to certified hardware architects instead of queueing behind an automated menu.",
+  },
+];
+
+const stats = [
+  { value: "99.8%", label: "SLA adherence across active contracts" },
+  { value: "4 hrs", label: "Median on-site response, Navi Mumbai" },
+  { value: "5,000+", label: "Units staged and dispatched monthly" },
+  { value: "8 yrs", label: "Serving corporates, hospitals, institutions" },
 ];
 
 const faqs = [
   {
-    question: "Do you support 30-day PO terms for corporate entities?",
+    question: "Do you support 30-day PO terms for corporates?",
     answer:
-      "Yes. Registered corporates with established credit credentials can procure IT hardware and AMCs through 30-day corporate Purchase Orders with standard GST documentation.",
+      "Yes. Registered corporates with established credit credentials can procure hardware and AMCs on 30-day purchase orders with standard GST documentation.",
   },
   {
-    question: "What components do you service in your repair lab?",
+    question: "What do you service in the repair lab?",
     answer:
-      "Our certified technicians handle chip-level motherboard logic repairs, micro-soldering, liquid spill cleanups, power IC swaps, display replacements, and data recovery for all leading OEM laptops and servers.",
+      "Chip-level motherboard logic repair, micro-soldering, liquid spill cleanup, power IC swaps, display replacement and data recovery across all leading OEM laptops and servers.",
   },
   {
-    question: "Can you deliver outside Mumbai / Maharashtra?",
+    question: "Can you deliver outside Mumbai and Maharashtra?",
     answer:
-      "Yes. While our headquarters and labs are based in Vashi, Navi Mumbai, we dispatch insured bulk hardware and provision corporate fleets across Pan-India with expedited transit.",
+      "Yes. Our headquarters and lab are in Vashi, Navi Mumbai, but we dispatch insured bulk hardware and provision corporate fleets Pan-India with expedited transit.",
   },
   {
-    question: "Are genuine OEM warranties maintained?",
+    question: "Are OEM warranties maintained?",
     answer:
-      "Every server, laptop, and enterprise switch sourced through RJ CAREPLUS carries original OEM warranty (Dell ProSupport, HPE Pointnext, Cisco Smart Net) with serial registration.",
+      "Every server, laptop and switch sourced through us carries its original OEM warranty — Dell ProSupport, HPE Pointnext, Cisco Smart Net — with serial registration.",
   },
 ];
 
 export default function Home() {
-  useEffect(() => {
-    const elements = document.querySelectorAll(".reveal");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-
-    elements.forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <main className="page-shell">
-      <header className="topbar">
-        <div className="nav-wrap">
-          <a className="brand" href="#top" aria-label="RJ CAREPLUS home">
-            <img
-              src="/logo/rj-careplus-logo.png"
-              alt="RJ CAREPLUS Logo"
-            />
-          </a>
+    <>
+      <LaptopHero />
 
-          <nav className="main-nav" aria-label="Main navigation">
+      <header className="topbar">
+        <div className="wrap topbar-inner">
+          <a href="#top" aria-label="RJ CAREPLUS home">
+            <img src="/logo/rj-careplus-logo.png" alt="RJ CAREPLUS" />
+          </a>
+          <nav className="main-nav" aria-label="Main">
             {navItems.map((item) => (
               <a key={item.label} href={item.href}>
                 {item.label}
               </a>
             ))}
           </nav>
-
-          <div className="header-actions">
-            <a className="primary-btn" href="#quote-builder" aria-label="Get corporate quote">
-              <span>Get Corporate Quote</span>
-            </a>
-            <a className="phone-chip" href="tel:+917506434129" aria-label="Call RJ CAREPLUS">
+          <div className="topbar-actions">
+            <a className="icon-btn" href="tel:+917506434129" aria-label="Call RJ CAREPLUS">
               <span className="material-symbols-outlined">call</span>
+            </a>
+            <a className="btn solid sm" href="#contact">
+              Get a quote
             </a>
           </div>
         </div>
       </header>
 
-      <main className="content">
-        <section className="hero section" id="top">
-          <div className="max-width hero-inner">
-            <div className="eyebrow-banner">
-              <div className="live-pill">
-                <span className="dot" />
-                <span>CORPORATE SUPPLY &amp; REPAIR HUB • NAVI MUMBAI</span>
-              </div>
-              <div className="mini-rail">
-                <span>
-                  <span className="material-symbols-outlined">verified</span>
-                  DIRECT OEM REGISTRY
-                </span>
-                <span className="highlight">
-                  <span className="material-symbols-outlined">local_shipping</span>
-                  SAME-DAY DISPATCH
-                </span>
-              </div>
-            </div>
-
-            <div className="hero-grid">
-              <div className="hero-copy reveal">
-                <div className="eyebrow-tag">
-                  <span className="material-symbols-outlined">verified</span>
-                  <span>YOUR ONE STOP NEEDS FOR ALL IT COMPONENTS</span>
-                </div>
-
-                <h1>
-                  Next-Generation IT Infrastructure &amp; Corporate Supply.
-                  <span>Built for Uptime.</span>
-                </h1>
-
-                <p>
-                  <strong>RJ CAREPLUS</strong> equips enterprises, hospitals, institutions, and
-                  high-growth businesses with tier-1 computing fleets, high-availability servers,
-                  certified networking, and rapid-turnaround chip-level repair services.
-                </p>
-
-                <div className="hero-actions">
-                  <a className="primary-btn large" href="#quote-builder" aria-label="Get corporate quote">
-                    <span>Get Corporate Quote</span>
-                  </a>
-                  <a className="secondary-btn large" href="#solutions" aria-label="Explore hardware catalog">
-                    <span className="material-symbols-outlined">inventory_2</span>
-                    <span>Explore Catalog</span>
-                  </a>
-                </div>
-
-                <div className="status-grid">
-                  {brandPillars.map((item) => (
-                    <div key={item} className="status-pill">
-                      <span className="material-symbols-outlined">verified_user</span>
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="hero-visual reveal">
-                <div className="visual-frame">
-                  <img
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkilyIyuScTkU87rTui7B_6yt1SN1Nofe5yu2eAroVUMQf7VBvKYGpANo5QZROPyYxQWKKXwypMDDkO_hE5etCbiG-pjQsxor-Hryo4aGJltaTTDfdE4NtL3awM5Z0_dqmqQvj7YwvPPfD4_Vgqqv5DjUoAzBVpx_XLQ_Qca9zAcC6XLgc9XO-jS2PHEy6YeBUEdM0QW8qhQLqdyl5U_PZQ73ADBjRsrUc8svPrs9ON49dryOYwBB5"
-                    alt="Corporate enterprise workspace with IT hardware"
-                  />
-
-                  <div className="visual-overlay">
-                    <div>
-                      <span className="label">OPERATIONS BASE // VASHI PLAZA</span>
-                      <h3>Bespoke Staging &amp; Testing Facility</h3>
-                      <p>Turnkey pre-configured systems ready for client rollouts</p>
-                    </div>
-                    <span className="tag">QC STAGED</span>
-                  </div>
-                </div>
-
-                <div className="floating-card">
-                  <div className="icon-wrap">
-                    <span className="material-symbols-outlined">hub</span>
-                  </div>
-                  <div>
-                    <p className="small-label">FLEET CAPACITY</p>
-                    <p className="value">10 to 5,000+ Units/Mo</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="logo-strip">
-          <div className="max-width logo-strip-inner">
-            <div className="brand-inline">
-              <span className="material-symbols-outlined">verified</span>
-              <span>OFFICIAL OEM ALLIANCES &amp; DIRECT SOURCING</span>
-            </div>
-            <div className="brand-list">
-              <span>DELL Technologies</span>
-              <span className="slash">/</span>
-              <span>HPE Enterprise</span>
-              <span className="slash">/</span>
-              <span>Lenovo ThinkSystem</span>
-              <span className="slash">/</span>
-              <span>Cisco Systems</span>
-              <span className="slash">/</span>
-              <span>Fortinet</span>
-              <span className="slash">/</span>
-              <span>Asus Pro</span>
-              <span className="slash">/</span>
-              <span>HP Commercial</span>
-            </div>
-          </div>
-        </section>
-
-        <section id="solutions" className="section solutions">
-          <div className="max-width">
-            <div className="section-heading reveal">
-              <div>
-                <span className="section-kicker">SOLUTIONS &amp; CAPABILITIES</span>
-                <h2>Comprehensive Hardware, Sourcing &amp; Repairs</h2>
-              </div>
-              <a href="#quote-builder">GET A TAILORED BOM QUOTE</a>
-            </div>
-
-            <div className="capability-grid reveal">
-              {capabilities.map((capability) => (
-                <article key={capability.title} className="capability-card">
-                  <div className="capability-top">
-                    <div className="icon-wrap highlight">
-                      <span className="material-symbols-outlined">{capability.icon}</span>
-                    </div>
-                    <span className="eyebrow">{capability.eyebrow}</span>
-                  </div>
-                  <h3>{capability.title}</h3>
-                  <p>{capability.text}</p>
-                  <div className="card-footer">
-                    <span>{capability.meta}</span>
-                    <span className="action-link">{capability.cta}</span>
-                  </div>
-                </article>
+      <main>
+        <div className="marquee" aria-label="Authorised OEM partners">
+          {[0, 1].map((copy) => (
+            <ul key={copy} aria-hidden={copy === 1}>
+              {oems.map((name) => (
+                <li key={name}>{name}</li>
               ))}
-            </div>
-          </div>
-        </section>
+            </ul>
+          ))}
+        </div>
 
-        <section id="about" className="section advantage-section">
-          <div className="max-width advantage-layout reveal">
-            <div className="advantage-copy">
-              <span className="section-kicker">THE RJ CAREPLUS ADVANTAGE</span>
-              <h2>Why Corporate Leaders &amp; IT Directors Rely on Us.</h2>
-              <p>
-                We remove the friction of dealing with multiple fragmented vendors. RJ CAREPLUS
-                combines raw wholesale procurement power with precision engineering and fast
-                repair turnarounds.
-              </p>
-
-              <div className="advantage-list">
-                <div className="mini-feature">
-                  <div className="icon-wrap soft">
-                    <span className="material-symbols-outlined">shield</span>
-                  </div>
-                  <div>
-                    <h4>100% Genuine OEM Hardware</h4>
-                    <p>
-                      Direct authorized channels guaranteeing authentic warranties and valid serial
-                      tracking with Dell, HP, Lenovo &amp; Cisco.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mini-feature">
-                  <div className="icon-wrap soft">
-                    <span className="material-symbols-outlined">precision_manufacturing</span>
-                  </div>
-                  <div>
-                    <h4>In-House Staging &amp; Testing Lab</h4>
-                    <p>
-                      Every workstation, server, and network switch is burned-in,
-                      firmware-updated, and pre-configured before delivery.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mini-feature">
-                  <div className="icon-wrap soft">
-                    <span className="material-symbols-outlined">support_agent</span>
-                  </div>
-                  <div>
-                    <h4>Direct Engineer Access (No IVR)</h4>
-                    <p>
-                      Instant escalation to certified hardware architects and service managers
-                      without waiting on automated manufacturer queues.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="advantage-visual">
-              <div className="image-grid">
-                <div className="photo-card">
-                  <img
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKRb64QECTLK1eZvI2IOwA3a3silKGuLYmT6qLQ6qKhyDq0ROR01otB6n5SffyGCR8MUVnCXLhK2Um6Q25tI6JeLev2d3OPNEAJZTk2Fu2WJWexNrbIqDQU_Hed5j2neRMByn42m-CLjJmfiwfFjh_BV6uMOnhgxxBQxfCOUFqlAOX1qgtTSDzZn-VVjvyltcZAU6iowjxDRsIjT1SVM-AK7mBDLsEtkb0_Q2ADpVxsndlg3U94d5q"
-                    alt="Server cluster in a data center"
-                  />
-                  <div className="photo-copy">
-                    <span>ENTERPRISE COMPUTE</span>
-                    <p>High-availability cluster deployments &amp; SAN storage expansions.</p>
-                  </div>
-                </div>
-
-                <div className="photo-card">
-                  <img
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcyt8eP5Efp4sWJCCiIE2OQkJnDbIQtbl4hks9qKpx4ekTk9oNPq9_OovJShSrzjIsSj1ClVuEIMbokoMjgkdfMMhbP_9rS9LSFCQ4CiXqdipVd0fHp-JeHjML6Rvdjtjzgd5xGY1N_PJPRM3MJJ-eSbVamvAiW1WHjU2Pgyc4NVdthJ29PfsqGiV9a_da7PrIZzsoLvaAEIMoPWxYmsp97r0XOIGhfulAvagdCMgL8xN_rMyl8CSG"
-                    alt="Executive office workspace"
-                  />
-                  <div className="photo-copy">
-                    <span>FLEET ROLLOUTS</span>
-                    <p>Pre-configured corporate laptop &amp; monitor bulk supply.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="stat-row">
-                {advantageStats.map((stat) => (
-                  <div key={stat.label} className="stat-box">
-                    <span>{stat.value}</span>
-                    <p>{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="services" className="section transparency-section">
-          <div className="max-width transparency-grid reveal">
-            <div className="transparency-copy">
-              <span className="section-kicker">TRANSPARENCY &amp; PHYSICAL OPERATIONS</span>
-              <h2>Direct Corporate Verification &amp; Walk-In Tech Center</h2>
-              <p>
-                We operate an established commercial lab and corporate supply office right in Vashi
-                Plaza, Navi Mumbai. Meet our technical consultants, test hardware on-site, or drop off
-                mission-critical units for express repairs.
-              </p>
-
-              <div className="operations-grid">
-                <div className="ops-card">
-                  <span>OPERATIONS OFFICE</span>
-                  <p>C/110, C-Wing, Vashi Plaza, Sector - 17, Vashi, Navi Mumbai, MH - 400703</p>
-                </div>
-                <div className="ops-card">
-                  <span>DIRECT TELECOM LINES</span>
-                  <strong>+91 7506434129<br />+91 8169314307</strong>
-                </div>
-              </div>
-
-              <div className="open-hours">
-                <span className="pulse-dot" />
-                <span>IN-PERSON CONSULTATIONS &amp; REPAIR DIAGNOSTICS: MON - SAT (10:00 - 19:30)</span>
-              </div>
-            </div>
-
-            <div className="lab-card">
-              <div className="lab-head">
-                <img
-                  src="/logo/rj-careplus-logo.png"
-                  alt="RJ CAREPLUS"
+        {/* ---------- 01 · capabilities ---------- */}
+        <section id="catalog" className="section">
+          <div className="wrap">
+            <div className="sec-head">
+              <div>
+                <Rise>
+                  <p className="eyebrow">
+                    <span className="num">01</span>
+                    <span className="bar" />
+                    <span className="label">What we supply</span>
+                  </p>
+                </Rise>
+                <Headline
+                  className="display"
+                  text="One vendor for every box you plug in."
+                  italicFrom={5}
                 />
-                <span className="authorized-badge">
-                  <span className="material-symbols-outlined">verified</span>
-                  AUTHORIZED
-                </span>
               </div>
-
-              <div className="lab-body">
-                <span className="mini-kicker">CORPORATE PARTNER &amp; TECH LAB</span>
-                <p>
-                  Providing end-to-end hardware supply, chip-level diagnosis, and managed IT
-                  services across Mumbai &amp; Pan-India.
+              <Rise delay={0.15}>
+                <p className="lede">
+                  Procurement, staging, networking and repair under one roof — so nobody on
+                  your team is chasing six suppliers to finish one rollout.
                 </p>
-              </div>
+              </Rise>
+            </div>
 
-              <div className="feature-badges">
-                <div>
-                  <span className="material-symbols-outlined">laptop_mac</span>
-                  <span>Laptops &amp; Desktops</span>
-                </div>
-                <div>
-                  <span className="material-symbols-outlined">desktop_windows</span>
-                  <span>Monitors &amp; Displays</span>
-                </div>
-                <div>
-                  <span className="material-symbols-outlined">print</span>
-                  <span>Printers &amp; Toners</span>
-                </div>
-                <div>
-                  <span className="material-symbols-outlined">memory</span>
-                  <span>Chip-Level Diagnostics</span>
-                </div>
-              </div>
+            <Stagger className="cap-list" gap={0.07}>
+              {capabilities.map((cap, i) => (
+                <Item key={cap.title} className="cap">
+                  <span className="cap-n">{String(i + 1).padStart(2, "0")}</span>
+                  <div className="cap-title">
+                    <span className="material-symbols-outlined">{cap.icon}</span>
+                    <h3>{cap.title}</h3>
+                  </div>
+                  <p>{cap.text}</p>
+                  <span className="go" aria-hidden="true">
+                    <span className="material-symbols-outlined">arrow_outward</span>
+                  </span>
+                </Item>
+              ))}
+            </Stagger>
+          </div>
+        </section>
 
-              <div className="lab-footer">
-                <span>
-                  <span className="pulse-dot" />
-                  Vashi Plaza, Sector 17
-                </span>
-                <span>GST REGISTERED</span>
-              </div>
+        {/* ---------- 02 · the studio ---------- */}
+        <section id="studio" className="section alt">
+          <div className="wrap split">
+            <div>
+              <Rise>
+                <p className="eyebrow">
+                  <span className="num">02</span>
+                  <span className="bar" />
+                  <span className="label">Why we get kept on</span>
+                </p>
+              </Rise>
+              <Headline
+                className="display"
+                text="Bought once. Trusted after."
+                italicFrom={2}
+              />
+              <Rise delay={0.15}>
+                <p className="lede" style={{ marginTop: 26 }}>
+                  We pair wholesale procurement power with a real engineering bench, which is
+                  why IT directors stop shopping around after the first rollout.
+                </p>
+              </Rise>
+
+              <Stagger className="mini-list" gap={0.08}>
+                {advantages.map((item) => (
+                  <Item key={item.title} className="mini">
+                    <span className="material-symbols-outlined">{item.icon}</span>
+                    <div>
+                      <h4>{item.title}</h4>
+                      <p>{item.text}</p>
+                    </div>
+                  </Item>
+                ))}
+              </Stagger>
+            </div>
+
+            <Reveal
+              className="figure"
+              src="/editorial_photograph_of_a_contemporary_light_filled_company_office_interior.png"
+              alt="Open-plan corporate office full of deployed workstations"
+            >
+              <figcaption>
+                <span className="label">Fleet rollouts</span>
+                <p>Pre-configured laptops and monitors, floor-ready.</p>
+              </figcaption>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* ---------- stat band ---------- */}
+        <section className="section tight">
+          <div className="wrap">
+            <Stagger className="stats" gap={0.09}>
+              {stats.map((stat) => (
+                <Item key={stat.value} className="stat">
+                  <b>{stat.value}</b>
+                  <p>{stat.label}</p>
+                </Item>
+              ))}
+            </Stagger>
+          </div>
+        </section>
+
+        {/* ---------- 03 · the lab ---------- */}
+        <section id="lab" className="section">
+          <div className="wrap split flip">
+            <Reveal
+              className="figure wide"
+              src="/overhead_and_isometric_studio_photography_of_a_perfectly_assembled_executive.png"
+              alt="Assembled executive workstation with laptop, monitor and peripherals"
+            >
+              <figcaption>
+                <span className="label">Staged &amp; tested</span>
+                <p>Every desk kit burned in and imaged before it ships.</p>
+              </figcaption>
+            </Reveal>
+
+            <div>
+              <Rise>
+                <p className="eyebrow">
+                  <span className="num">03</span>
+                  <span className="bar" />
+                  <span className="label">Transparency &amp; operations</span>
+                </p>
+              </Rise>
+              <Headline className="display" text="A real lab you can walk into." italicFrom={4} />
+              <Rise delay={0.15}>
+                <p className="lede" style={{ marginTop: 26 }}>
+                  Our commercial lab and supply office sit in Vashi Plaza, Navi Mumbai. Meet the
+                  consultants, test hardware on site, or drop off mission-critical units for
+                  express repair.
+                </p>
+              </Rise>
+
+              <Rise delay={0.2}>
+                <div className="ops-cards">
+                  <div className="ops-card">
+                    <span className="label">Operations office</span>
+                    <p>C/110, C-Wing, Vashi Plaza, Sector 17, Vashi, Navi Mumbai, MH 400703</p>
+                  </div>
+                  <div className="ops-card">
+                    <span className="label">Direct lines</span>
+                    <strong>
+                      +91 75064 34129
+                      <br />
+                      +91 81693 14307
+                    </strong>
+                  </div>
+                </div>
+              </Rise>
+
+              <Rise delay={0.25}>
+                <p className="hours">
+                  <span className="dot" />
+                  <span className="label">Walk-ins &amp; diagnostics — Mon to Sat, 10:00–19:30</span>
+                </p>
+              </Rise>
             </div>
           </div>
         </section>
 
-        <section id="quote-builder" className="section inquiry-section">
-          <div className="max-width inquiry-wrap reveal">
-            <div className="inquiry-copy">
-              <div className="eyebrow-tag dark-tag">
-                <span className="material-symbols-outlined">request_quote</span>
-                <span>FAST 2-HOUR QUOTE TURNAROUND</span>
-              </div>
-              <h2>Build Your Corporate IT Inquiry</h2>
-              <p>
-                Need a competitive corporate quotation, immediate chip-level repair estimate, or
-                comprehensive AMC proposal? Submit your specifications directly to our engineering desk.
-              </p>
+        {/* ---------- 04 · contact ---------- */}
+        <section id="contact" className="section alt">
+          <div className="wrap inq-layout">
+            <div>
+              <Rise>
+                <p className="eyebrow">
+                  <span className="num">04</span>
+                  <span className="bar" />
+                  <span className="label">Two-hour quote turnaround</span>
+                </p>
+              </Rise>
+              <Headline className="display" text="Tell us what you need to run." italicFrom={4} />
+              <Rise delay={0.15}>
+                <p className="lede" style={{ marginTop: 26 }}>
+                  A competitive quotation, a chip-level repair estimate or an AMC proposal —
+                  straight to the engineering desk, not a sales queue.
+                </p>
+              </Rise>
 
-              <div className="contact-points">
-                <div className="contact-item">
+              <Stagger className="contact-list" gap={0.07}>
+                <Item className="contact-item">
                   <span className="material-symbols-outlined">phone</span>
                   <div>
-                    <small>DIRECT HELPLINE</small>
-                    <a href="tel:+917506434129">+91 7506434129 / +91 8169314307</a>
+                    <span className="label">Direct helpline</span>
+                    <a href="tel:+917506434129">+91 75064 34129 / +91 81693 14307</a>
                   </div>
-                </div>
-                <div className="contact-item">
+                </Item>
+                <Item className="contact-item">
                   <span className="material-symbols-outlined">mail</span>
                   <div>
-                    <small>CORPORATE EMAIL</small>
+                    <span className="label">Corporate email</span>
                     <a href="mailto:info.rjcareplus@gmail.com">info.rjcareplus@gmail.com</a>
                   </div>
-                </div>
-                <div className="contact-item">
+                </Item>
+                <Item className="contact-item">
                   <span className="material-symbols-outlined">domain</span>
                   <div>
-                    <small>OFFICIAL WEBSITE</small>
+                    <span className="label">Official website</span>
                     <span>www.rjcareplus.com</span>
                   </div>
-                </div>
+                </Item>
+              </Stagger>
+            </div>
+
+            <Rise delay={0.1}>
+              <div className="form-card">
+                <h3>Request a BOQ or repair estimate</h3>
+                <form
+                  className="inquiry-form"
+                  action="mailto:info.rjcareplus@gmail.com"
+                  method="post"
+                  encType="text/plain"
+                >
+                  <div className="form-row">
+                    <label>
+                      <span className="label">Company / organization *</span>
+                      <input name="company" type="text" required placeholder="Apex Hospital" />
+                    </label>
+                    <label>
+                      <span className="label">Name &amp; designation *</span>
+                      <input name="contact" type="text" required placeholder="R. Sharma, IT Lead" />
+                    </label>
+                  </div>
+
+                  <div className="form-row">
+                    <label>
+                      <span className="label">Corporate email *</span>
+                      <input name="email" type="email" required placeholder="name@organization.com" />
+                    </label>
+                    <label>
+                      <span className="label">Telephone *</span>
+                      <input name="phone" type="tel" required placeholder="+91 98765 43210" />
+                    </label>
+                  </div>
+
+                  <div className="form-row">
+                    <label>
+                      <span className="label">Primary requirement</span>
+                      <select name="requirement" defaultValue="Workstations & laptop fleets">
+                        <option>Workstations &amp; laptop fleets</option>
+                        <option>Rack servers &amp; SAN storage</option>
+                        <option>Firewalls &amp; network switches</option>
+                        <option>Chip-level repair / diagnostics</option>
+                        <option>Printers, toners &amp; consumables</option>
+                        <option>Annual maintenance contract</option>
+                      </select>
+                    </label>
+                    <label>
+                      <span className="label">Estimated volume</span>
+                      <select name="volume" defaultValue="1–10 units (express)">
+                        <option>1–10 units (express)</option>
+                        <option>10–50 units (fleet)</option>
+                        <option>50–250 units (rollout)</option>
+                        <option>250+ units (enterprise bulk)</option>
+                        <option>Single server / storage unit</option>
+                      </select>
+                    </label>
+                  </div>
+
+                  <label>
+                    <span className="label">Specs, part numbers or fault symptoms</span>
+                    <textarea
+                      name="notes"
+                      rows={4}
+                      placeholder="Paste desired specs (RAM, SSD, processor family, OS image) or describe the hardware fault…"
+                    />
+                  </label>
+
+                  <button type="submit" className="btn solid">
+                    Submit inquiry
+                    <span className="material-symbols-outlined">arrow_outward</span>
+                  </button>
+
+                  <div className="form-foot">
+                    <span className="label">Confidential technical audit</span>
+                    <span className="label">GST invoice &amp; PO ready</span>
+                  </div>
+                </form>
               </div>
-            </div>
-
-            <div className="inquiry-form-wrap">
-              <h3>Request Bill of Quantities (BOQ) or Repair Estimate</h3>
-              <form className="inquiry-form">
-                <div className="form-row">
-                  <label>
-                    Company / Organization Name *
-                    <input type="text" placeholder="e.g. Apex Hospital / Tech Corp" />
-                  </label>
-                  <label>
-                    Your Name &amp; Designation *
-                    <input type="text" placeholder="e.g. Rajesh Sharma (IT Lead)" />
-                  </label>
-                </div>
-
-                <div className="form-row">
-                  <label>
-                    Corporate Email Address *
-                    <input type="email" placeholder="name@organization.com" />
-                  </label>
-                  <label>
-                    Contact Telephone *
-                    <input type="tel" placeholder="+91 98765 43210" />
-                  </label>
-                </div>
-
-                <div className="form-row">
-                  <label>
-                    Primary Requirement
-                    <select defaultValue="Workstations & Laptop Fleets">
-                      <option>Workstations &amp; Laptop Fleets</option>
-                      <option>Enterprise Rack Servers &amp; SAN Storage</option>
-                      <option>Perimeter Firewalls &amp; Network Switches</option>
-                      <option>Chip-Level Component Repair / Diagnostics</option>
-                      <option>Printers, Toners &amp; Consumables Supply</option>
-                      <option>Annual Maintenance Contract (AMC)</option>
-                    </select>
-                  </label>
-                  <label>
-                    Estimated Unit Volume
-                    <select defaultValue="1 - 10 Units (Express)">
-                      <option>1 - 10 Units (Express)</option>
-                      <option>10 - 50 Units (Fleet Provision)</option>
-                      <option>50 - 250 Units (Corporate Rollout)</option>
-                      <option>250+ Units (Enterprise Bulk)</option>
-                      <option>Single Server / Storage Unit</option>
-                    </select>
-                  </label>
-                </div>
-
-                <label>
-                  Specification Notes / Part Numbers / Symptoms
-                  <textarea rows={4} placeholder="Paste desired specs (RAM, SSD, processor family, OS image) or describe hardware repair faults..." />
-                </label>
-
-                <button type="submit" className="submit-btn">
-                  <span>Submit Corporate Inquiry to RJ CAREPLUS</span>
-                  <span className="material-symbols-outlined">send</span>
-                </button>
-
-                <div className="form-footer">
-                  <span>100% CONFIDENTIAL TECHNICAL AUDIT</span>
-                  <span>GST INVOICE &amp; PO READY</span>
-                </div>
-              </form>
-            </div>
+            </Rise>
           </div>
         </section>
 
-        <section className="section faq-section">
-          <div className="max-width faq-wrap reveal">
-            <div className="faq-header">
-              <span className="section-kicker">COMMON QUERIES</span>
-              <h2>Frequently Asked Questions</h2>
+        {/* ---------- 05 · faq ---------- */}
+        <section className="section">
+          <div className="wrap">
+            <div className="sec-head">
+              <div>
+                <Rise>
+                  <p className="eyebrow">
+                    <span className="num">05</span>
+                    <span className="bar" />
+                    <span className="label">Common queries</span>
+                  </p>
+                </Rise>
+                <Headline className="display" text="Questions, answered plainly." italicFrom={1} />
+              </div>
+              <Rise delay={0.15}>
+                <p className="lede">
+                  Anything not covered here, ask the engineering desk directly — you will get a
+                  human, not a ticket number.
+                </p>
+              </Rise>
             </div>
 
-            <div className="faq-grid">
+            <Stagger className="faq-list" gap={0.07}>
               {faqs.map((faq) => (
-                <article key={faq.question} className="faq-card">
-                  <h3>{faq.question}</h3>
-                  <p>{faq.answer}</p>
-                </article>
+                <Item key={faq.question}>
+                  <details className="faq">
+                    <summary>
+                      {faq.question}
+                      <span className="material-symbols-outlined">add</span>
+                    </summary>
+                    <p>{faq.answer}</p>
+                  </details>
+                </Item>
               ))}
-            </div>
+            </Stagger>
+          </div>
+        </section>
+
+        {/* ---------- closing ---------- */}
+        <section className="closing">
+          <div className="wrap">
+            <Rise>
+              <span className="label">Let&rsquo;s spec it together</span>
+            </Rise>
+            <Headline className="display" text="Your IT never stops working." italicFrom={2} />
+            <Rise delay={0.15}>
+              <p>
+                Send a parts list, a floor count or a dead motherboard. We will come back with a
+                costed answer the same working day.
+              </p>
+            </Rise>
+            <Rise delay={0.25}>
+              <div className="closing-cta">
+                <a className="btn solid" href="#contact">
+                  Request a quote
+                </a>
+                <a className="btn line" href="tel:+917506434129">
+                  <span className="material-symbols-outlined">call</span>
+                  +91 75064 34129
+                </a>
+              </div>
+            </Rise>
           </div>
         </section>
       </main>
 
       <footer className="site-footer">
-        <div className="max-width footer-grid">
+        <div className="wrap footer-grid">
           <div className="footer-brand">
-            <div className="footer-logo">
-              <img
-                src="/logo/rj-careplus-logo.png"
-                alt="RJ CAREPLUS Logo"
-              />
-            </div>
+            <img src="/logo/rj-careplus-logo.png" alt="RJ CAREPLUS" />
             <p>
-              Your one stop needs for all IT components. High-performance enterprise compute,
-              corporate fleet supply, certified chip-level repairs, and seamless annual
-              maintenance contracts.
+              Your one stop for every IT component. Enterprise compute, corporate fleet supply,
+              certified chip-level repair and annual maintenance contracts.
             </p>
-            <div className="footer-live">
-              <span className="pulse-dot" />
-              <span>TRUSTED PARTNER FOR YOUR IT NEEDS</span>
-            </div>
+            <span className="footer-live">
+              <span className="dot" />
+              <span className="label">Trusted partner for your IT needs</span>
+            </span>
           </div>
 
           <div className="footer-col">
-            <span className="footer-title">SOLUTIONS</span>
+            <h4 className="label">Solutions</h4>
             <ul>
-              <li><a href="#solutions">Laptops &amp; Desktops</a></li>
-              <li><a href="#solutions">Servers &amp; Storage</a></li>
-              <li><a href="#solutions">Perimeter Firewalls</a></li>
-              <li><a href="#solutions">Printers &amp; Toners</a></li>
-              <li><a href="#solutions">Chip-Level Repairs</a></li>
-              <li><a href="#solutions">Enterprise AMCs</a></li>
+              <li><a href="#catalog">Laptops &amp; desktops</a></li>
+              <li><a href="#catalog">Servers &amp; storage</a></li>
+              <li><a href="#catalog">Perimeter firewalls</a></li>
+              <li><a href="#catalog">Printers &amp; toners</a></li>
+              <li><a href="#catalog">Chip-level repairs</a></li>
+              <li><a href="#catalog">Enterprise AMCs</a></li>
             </ul>
           </div>
 
           <div className="footer-col">
-            <span className="footer-title">AUTHORIZED BRANDS</span>
+            <h4 className="label">Authorized brands</h4>
             <ul>
               <li>Dell Technologies</li>
               <li>HPE Enterprise</li>
@@ -628,27 +536,34 @@ export default function Home() {
           </div>
 
           <div className="footer-col">
-            <span className="footer-title">HEADQUARTERS &amp; LAB</span>
-            <div className="footer-contact">
-              <p><strong>Address:</strong> C/110, C-Wing, Vashi Plaza, Sector - 17, Vashi, Navi Mumbai, Maharashtra - 400703</p>
-              <p><strong>Phones:</strong> +91 7506434129 / +91 8169314307</p>
-              <p><strong>Emails:</strong> <a href="mailto:info.rjcareplus@gmail.com">info.rjcareplus@gmail.com</a> / <a href="mailto:rj.careplus@rediffmail.com">rj.careplus@rediffmail.com</a></p>
-              <p><strong>Web:</strong> www.rjcareplus.com</p>
-            </div>
+            <h4 className="label">Headquarters &amp; lab</h4>
+            <address>
+              <span>
+                <b>Address</b> — C/110, C-Wing, Vashi Plaza, Sector 17, Vashi, Navi Mumbai,
+                Maharashtra 400703
+              </span>
+              <span>
+                <b>Phone</b> — +91 75064 34129 / +91 81693 14307
+              </span>
+              <span>
+                <b>Email</b> — <a href="mailto:info.rjcareplus@gmail.com">info.rjcareplus@gmail.com</a>
+              </span>
+              <span>
+                <b>Web</b> — www.rjcareplus.com
+              </span>
+            </address>
           </div>
         </div>
 
-        <div className="max-width bottom-bar">
-          <span>© 2026 RJ CAREPLUS. All rights reserved. Sales, Repairs &amp; Corporate Supply.</span>
-          <div className="legal-links">
-            <a href="#">Privacy Policy</a>
-            <span>·</span>
-            <a href="#">Terms of Procurement</a>
-            <span>·</span>
-            <a href="#">Repair Warranty Terms</a>
-          </div>
+        <div className="wrap bottom-bar">
+          <span className="label">© 2026 RJ CAREPLUS — Sales, repairs &amp; corporate supply</span>
+          <nav>
+            <a className="label" href="#contact">Privacy</a>
+            <a className="label" href="#contact">Procurement terms</a>
+            <a className="label" href="#contact">Repair warranty</a>
+          </nav>
         </div>
       </footer>
-    </main>
+    </>
   );
 }
